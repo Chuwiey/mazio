@@ -100,7 +100,9 @@
           this.wallGrid[i] = Math.random() < 0.3 ? 1 : 0;
         }
         this.st = this.StartEnd();
+        console.log(this.st, this.get(this.st[0],this.st[1]), this.isMarkedLocation(this.st[0],this.st[1]));
         this.end = this.StartEnd();
+        console.log(this.end, this.get(this.end[0],this.end[1]), this.isMarkedLocation(this.end[0],this.end[1]));
       };
 
       Map.prototype.isMarkedLocation = function(x,y) {
@@ -113,10 +115,11 @@
       Map.prototype.StartEnd = function() {
         var x = Math.floor(Math.random()*this.size);
         var y = Math.floor(Math.random()*this.size);
+        var ar = [x,y];
         if (this.get(x,y) || this.isMarkedLocation(x,y)) {
-          this.StartEnd();
+          ar = this.StartEnd();
         }
-        return [x,y];
+        return ar;
       }
 
       Map.prototype.cast = function(point, angle, range) {
@@ -281,7 +284,7 @@
       };
 
       var display = document.getElementById('display');
-      var map = new Map(16);
+      var map = new Map(4);
       map.randomize();
       var player = new Player(map.st[0], map.st[1], Math.PI * 0.3);
       var controls = new Controls();
@@ -302,6 +305,9 @@
           }
           else if (Math.floor(player.y) * map.size + Math.floor(player.x) === i) {
             maze += 'X,';
+          }
+          else if (map.wallGrid[i] === 1) {
+            maze += '1,';
           }
           else if (grid[i] === 6) {
             maze += '+,';
@@ -327,6 +333,7 @@
 
       mazeSolver.prototype.move = function(curX, curY) {
         // debugger;
+        console.log('x:', curX, 'y:', curY);
         if (this.solved) { return false; }
         if (curY < 0 || curY >= this.size) { return false; }
         if (curX < 0 || curX >= this.size) { return false; }
@@ -337,6 +344,7 @@
         this.steps++;
 
         if (this.maze[curY*this.size + curX] === 1) {
+          // console.log('wall');
           return false; // is wall?
         }
         else if (this.end[0] === curX && this.end[1] === curY) {
