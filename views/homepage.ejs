@@ -288,9 +288,9 @@
       var camera = new Camera(display, MOBILE ? 160 : 320, 0.8);
       var loop = new GameLoop();
 
-      var printMaze = function() { 
+      var printMaze = function(grid) { 
         var maze = '';
-        for (var i = 0; i < map.wallGrid.length; i++) {
+        for (var i = 0; i < grid.length; i++) {
           if (!(i % map.size)) {
             maze += '\n';
           }
@@ -303,19 +303,82 @@
           else if (Math.floor(player.y) * map.size + Math.floor(player.x) === i) {
             maze += 'X,';
           }
+          else if (grid[i] === 6) {
+            maze += '+,';
+          }
           else {
-            maze += map.wallGrid[i] + ',';
+            maze += grid[i] + ',';
           }
         }
-        console.clear();
+        // console.clear();
         console.log(maze);
       }
+
+      function mazeSolver(maze, size, start, end) {
+        this.maze = Array.prototype.slice.call(maze, 0);
+        this.mazeCopy = Array.prototype.slice.call(maze, 0);
+        this.size = size;
+        this.start = start;
+        this.end = end;
+        this.solved = false;
+        this.steps = 0;
+        this.moves = [];
+      }
+
+      mazeSolver.prototype.move = function(curX, curY) {
+        // debugger;
+        if (this.solved) { return false; }
+        if (curY < 0 || curY >= this.size) { return false; }
+        if (curX < 0 || curX >= this.size) { return false; }
+        if (this.mazeCopy[curY*this.size + curX] === 6) {
+            return false;
+        }
+        this.markMaze(curX, curY);
+        this.steps++;
+
+        if (this.maze[curY*this.size + curX] === 1) {
+          return false; // is wall?
+        }
+        else if (this.end[0] === curX && this.end[1] === curY) {
+          this.solved = true;
+          return true; // at end?
+        }
+        else if (this.move(curX-1, curY)) {
+          this.moves.push('left');
+          return true; // left
+        }
+        else if (this.move(curX, curY-1)) {
+          this.moves.push('up');
+          return true; // up
+        }
+        else if (this.move(curX+1, curY)) {
+          this.moves.push('right');
+          return true; // right
+        }
+        else if (this.move(curX, curY+1)) {
+          this.moves.push('down');
+          return true; // down
+        }
+      }
+
+      mazeSolver.prototype.markMaze = function(curX, curY) {
+        this.mazeCopy[curY*this.size + curX] = 6;
+        printMaze(this.mazeCopy);
+      }
+
+      x = new mazeSolver(map.wallGrid, map.size, map.st, map.end);
+      printMaze(map.wallGrid);
+      x.move(x.start[0],x.start[1]);
+      printMaze(x.maze);
+      console.log(x.moves.reverse(), x.steps);
+
+      //mazeSolver.prototype.walk = function()
       
       loop.start(function frame(seconds) {
         map.update(seconds);
         player.update(controls.states, map, seconds);
         camera.render(player, map);
-        printMaze();
+        //printMaze();
       });
 
     </script>
