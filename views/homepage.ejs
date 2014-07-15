@@ -80,9 +80,7 @@
 
       function Map(size) {
         this.size = size;
-        this.wallGrid = <% for (var i=0, arr=[]; i<maze.grid.length-1; i++) {
-          arr.push(maze.grid[i]);
-        } %> [<%= arr %>];
+        this.wallGrid = [<%= maze.grid %>];
         this.skybox = new Bitmap('/images/deathvalley_panorama.jpg', 2000, 750);
         this.wallTexture = new Bitmap('/images/wall_texture.jpg', 1024, 1024);
         this.light = 0;

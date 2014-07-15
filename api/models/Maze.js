@@ -127,7 +127,7 @@ module.exports = {
       this.hash = hashids.encrypt(+new Date());
       this.start = [-1,-1];
       this.end = [-2,-2];
-      var grid = new Uint8Array(size * size), start, end;
+      var grid = new Array(size * size), start, end;
       for (var i = 0; i < size * size; i++) {
         grid[i] = Math.random() < 0.3 ? 1 : 0; // 0.3 -> wallRatio
       }
