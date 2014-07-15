@@ -13,24 +13,24 @@ module.exports = {
 	attributes: {
     hash: {
       type: 'string',
-      // required: true
+      required: true
     },
     grid: {
       type: 'array',
-      // required: true
+      required: true
     },
     size: {
       type: 'integer',
-      // required: true
+      required: true
     },
     start: {
       type: 'array',
-      // required: true,
+      required: true,
       defaultsTo: [-1,-1]
     },
     end: {
       type: 'array',
-      // required: true,
+      required: true,
       defaultsTo: [-2,-2]
     },
 

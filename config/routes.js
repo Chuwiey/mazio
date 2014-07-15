@@ -30,7 +30,8 @@ module.exports.routes = {
   //   view: 'homepage'
   // },
 
-  'get /maze': 'MazeController.index',
+  'GET /maze/create': 'MazeController.createMaze',
+  'GET /maze/:id': 'MazeController.getMaze',
 
 
   // Custom routes here...

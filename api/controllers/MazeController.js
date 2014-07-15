@@ -6,13 +6,18 @@
  */
 
 module.exports = {
-	index: function(req,res) {
-    // console.log(Maze);
-    return res.view('homepage', {
-      maze: Maze.generate(16),
+	createMaze: function(req,res) {
+    var maze = Maze.generate(16);
+    Maze.create(maze).exec(function(err, maze) {
+      // console.log(maze);
+      res.redirect('/maze/' + maze.hash);
     });
-    // Maze.create().exec(function(err, maze) {
-    //   console.log(maze.generate);
-    // });
-  }
+  },
+  getMaze: function(req,res) {
+    Maze.findByHash(req.param('id')).done(function(err, maze) {
+      return res.view('homepage', {
+        maze: maze[0],
+      });
+    });
+  },
 };
