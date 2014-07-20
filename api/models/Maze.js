@@ -123,20 +123,28 @@ module.exports = {
   },
   
   generate: function(size) {
-      this.size = size;
+      this.size = size+1;
       this.hash = hashids.encrypt(+new Date());
       this.start = [-1,-1];
       this.end = [-2,-2];
-      var grid = new Array(size * size), start, end;
-      for (var i = 0; i < size * size; i++) {
-        grid[i] = Math.random() < 0.3 ? 1 : 0; // 0.3 -> wallRatio
+      var grid = new Array(this.size * this.size);
+      for (var i = 0; i < this.size * this.size; i++) {
+        if (i < this.size || i > (this.size*this.size-this.size) || (i+1)%this.size<2) {
+          grid[i] = 1;
+        }
+        else {
+          grid[i] = Math.random() < 0.4 ? 1 : 0; // 0.4 -> wallRatio
+        }
       }
+
       this.grid = grid;
       this.start = this.startEnd();
       this.end = this.startEnd();
+      // this.printMaze(this.hash, this.size, this.grid, this.start, this.end);
       if (!this.checkSolvable(this.grid, this.size, this.start, this.end)) {
         // make solvable return a true/false value;
-        this.grid = this.generate(this.size);
+        this.grid = this.generate(size);
+        return this.grid;
       }
       return {
         grid: this.grid,
@@ -147,10 +155,24 @@ module.exports = {
       };
   },
 
-  // beforeCreate: function(values, cb) {
-  //   console.log('at before create');
-  //   // values.grid = this.generateMaze(values.size);
-  //   cb();
-  // },
-
+  printMaze: function(hash, size, maze, start, end) {
+    console.log('hash:', hash);
+    var out = '';
+    for (var i=0; i < maze.length; i++) {
+      if (!(i % size)) {
+        out += '\n';
+        out += maze[i] + ',';
+      }
+      else if(this.start[1] * this.size + this.start[0] === i) {
+        out += 'S,';
+      }
+      else if(this.end[1] * this.size + this.end[0] === i) {
+        out += 'E,';
+      }
+      else {
+        out += maze[i] + ',';
+      }
+    }
+    console.log(out);
+  },
 };

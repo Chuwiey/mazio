@@ -16,7 +16,6 @@ module.exports = {
   getMaze: function(req,res) {
     Maze.findByHash(req.param('id')).exec(function(err, maze) {
       if (err) { res.send(err); }
-      console.log(maze[0]);
       return res.view('homepage', {
         maze: maze[0],
       });
