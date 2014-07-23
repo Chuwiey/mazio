@@ -1,3 +1,3 @@
 # mazio
 
-a [Sails](http://sailsjs.org) application
+A maze game using sails and raycasting. WIP
