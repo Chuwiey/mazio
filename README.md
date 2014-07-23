@@ -1,0 +1,4 @@
+mazio
+=====
+
+A maze game
